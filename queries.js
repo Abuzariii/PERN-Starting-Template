@@ -18,7 +18,7 @@ const getUsers = (request, response) => {
 const getUserById = (request, response) => {
   const id = parseInt(request.params.id);
 
-  pool.query("SELECT * FROM users WHERE id = $1", [id], (error, results) => {
+  pool.query(`SELECT * FROM users WHERE id = ${id}`, (error, results) => {
     if (error) {
       throw error;
     }
@@ -28,9 +28,9 @@ const getUserById = (request, response) => {
 
 const createUser = (request, response) => {
   const { name, email } = request.body;
-
+  // Descritpion for this syntax below
   pool.query(
-    "INSERT INTO users (name, email) VALUES ($1, $2)",
+    `INSERT INTO users (name, email) VALUES ($1, $2)`,
     [name, email],
     (error, results) => {
       if (error) {
@@ -60,7 +60,7 @@ const updateUser = (request, response) => {
 const deleteUser = (request, response) => {
   const id = parseInt(request.params.id);
 
-  pool.query("DELETE FROM users WHERE id = $1", [id], (error, results) => {
+  pool.query(`DELETE FROM users WHERE id = ${id}`, (error, results) => {
     if (error) {
       throw error;
     }
@@ -75,3 +75,8 @@ module.exports = {
   updateUser,
   deleteUser,
 };
+
+//  In the context of parameterized queries using the pg library in Node.js, the placeholders are represented by $1, $2, and so on, instead of using ${name} syntax
+// The reason for this difference is that the $1, $2 syntax is specific to the pg library and the PostgreSQL query protocol. It is used to bind parameters securely and efficiently in the query.
+// When using parameterized queries with the pg library, you pass the actual values as an array in the second parameter of the query() function. The library internally maps these values to the corresponding placeholders in the SQL query string based on their position in the array.
+// Therefore, in the given code snippet, you should continue using $1, $2, and $3 placeholders to represent the variables name, email, and id, respectively, instead of using the ${name} syntax.
